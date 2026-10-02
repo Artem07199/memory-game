@@ -62,3 +62,70 @@ gameBoard.setAttribute('aria-label', 'Игровое поле');
 app.append(header, stats, gameBoard);
 
 document.body.append(app);
+
+const cardValues = [
+  '🐶',
+  '🐱',
+  '🐭',
+  '🐹',
+  '🦊',
+  '🐻',
+  '🐼',
+  '🐨'
+];
+
+function shuffle(array) {
+  const shuffled = [...array];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+
+    [shuffled[index], shuffled[randomIndex]] = [
+      shuffled[randomIndex],
+      shuffled[index]
+    ];
+  }
+
+  return shuffled;
+}
+
+function createCard(value) {
+  const card = document.createElement('button');
+
+  card.className = 'card';
+  card.type = 'button';
+  card.setAttribute('aria-label', 'Закрытая карточка');
+
+  const cardInner = document.createElement('span');
+  cardInner.className = 'card__inner';
+
+  const cardFront = document.createElement('span');
+  cardFront.className = 'card__front';
+  cardFront.textContent = value;
+
+  const cardBack = document.createElement('span');
+  cardBack.className = 'card__back';
+  cardBack.textContent = '?';
+
+  cardInner.append(cardFront, cardBack);
+  card.append(cardInner);
+
+  return card;
+}
+
+function renderCards() {
+  gameBoard.replaceChildren();
+
+  const cards = shuffle([
+    ...cardValues,
+    ...cardValues
+  ]);
+
+  cards.forEach((value) => {
+    const card = createCard(value);
+
+    gameBoard.append(card);
+  });
+}
+
+renderCards();
