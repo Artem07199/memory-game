@@ -63,6 +63,9 @@ app.append(header, stats, gameBoard);
 
 document.body.append(app);
 
+
+// Card values
+
 const cardValues = [
   '🐶',
   '🐱',
@@ -74,27 +77,32 @@ const cardValues = [
   '🐨'
 ];
 
-function shuffle(array) {
-  const shuffled = [...array];
 
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
+// Shuffle
 
-    [shuffled[index], shuffled[randomIndex]] = [
-      shuffled[randomIndex],
-      shuffled[index]
+const shuffle = (cards) => {
+  const shuffledCards = [...cards];
+
+  for (let i = shuffledCards.length - 1; i > 0; i -= 1) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+
+    [shuffledCards[i], shuffledCards[randomIndex]] = [
+      shuffledCards[randomIndex],
+      shuffledCards[i]
     ];
   }
 
-  return shuffled;
-}
+  return shuffledCards;
+};
 
-function createCard(value) {
+
+// Create card
+
+const createCard = (value, index) => {
   const card = document.createElement('button');
-
   card.className = 'card';
   card.type = 'button';
-  card.setAttribute('aria-label', 'Закрытая карточка');
+  card.setAttribute('aria-label', `Карточка ${index + 1}`);
 
   const cardInner = document.createElement('span');
   cardInner.className = 'card__inner';
@@ -110,22 +118,25 @@ function createCard(value) {
   cardInner.append(cardFront, cardBack);
   card.append(cardInner);
 
-  return card;
-}
+  card.addEventListener('click', () => {
+    card.classList.toggle('card--open');
+  });
 
-function renderCards() {
+  return card;
+};
+
+
+// Render cards
+
+const renderCards = () => {
   gameBoard.replaceChildren();
 
-  const cards = shuffle([
-    ...cardValues,
-    ...cardValues
-  ]);
+  const cards = shuffle([...cardValues, ...cardValues]);
 
-  cards.forEach((value) => {
-    const card = createCard(value);
-
+  cards.forEach((value, index) => {
+    const card = createCard(value, index);
     gameBoard.append(card);
   });
-}
+};
 
 renderCards();
