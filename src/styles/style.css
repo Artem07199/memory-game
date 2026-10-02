@@ -149,14 +149,22 @@ button {
   font-weight: 700;
 }
 
-.card:hover .card__back {
-  background: var(--color-primary-hover);
-}
-
 .card--open .card__inner {
   transform: rotateY(180deg);
 }
 
+.card--matched {
+  cursor: default;
+}
+
+.card:hover .card__back {
+  background: var(--color-primary-hover);
+}
+
+
+.card--matched .card__front {
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
 
 @media (max-width: 600px) {
   .app {

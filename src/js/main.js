@@ -64,7 +64,7 @@ app.append(header, stats, gameBoard);
 document.body.append(app);
 
 
-// Card values
+// Cards
 
 const cardValues = [
   '🐶',
@@ -76,6 +76,9 @@ const cardValues = [
   '🐼',
   '🐨'
 ];
+
+let openedCards = [];
+let matchedCards = [];
 
 
 // Shuffle
@@ -96,12 +99,30 @@ const shuffle = (cards) => {
 };
 
 
+// Check match
+
+const checkMatch = () => {
+  const [firstCard, secondCard] = openedCards;
+
+  if (firstCard.dataset.value === secondCard.dataset.value) {
+    firstCard.classList.add('card--matched');
+    secondCard.classList.add('card--matched');
+
+    matchedCards.push(firstCard, secondCard);
+  }
+
+  openedCards = [];
+};
+
+
 // Create card
 
 const createCard = (value, index) => {
   const card = document.createElement('button');
+
   card.className = 'card';
   card.type = 'button';
+  card.dataset.value = value;
   card.setAttribute('aria-label', `Карточка ${index + 1}`);
 
   const cardInner = document.createElement('span');
@@ -119,7 +140,24 @@ const createCard = (value, index) => {
   card.append(cardInner);
 
   card.addEventListener('click', () => {
-    card.classList.toggle('card--open');
+    if (openedCards.length >= 2) {
+      return;
+    }
+
+    if (card.classList.contains('card--open')) {
+      return;
+    }
+
+    if (card.classList.contains('card--matched')) {
+      return;
+    }
+
+    card.classList.add('card--open');
+    openedCards.push(card);
+
+    if (openedCards.length === 2) {
+      checkMatch();
+    }
   });
 
   return card;
@@ -130,6 +168,9 @@ const createCard = (value, index) => {
 
 const renderCards = () => {
   gameBoard.replaceChildren();
+
+  openedCards = [];
+  matchedCards = [];
 
   const cards = shuffle([...cardValues, ...cardValues]);
 
