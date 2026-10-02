@@ -79,6 +79,7 @@ const cardValues = [
 
 let openedCards = [];
 let matchedCards = [];
+let closeTimer = null;
 
 
 // Shuffle
@@ -109,9 +110,19 @@ const checkMatch = () => {
     secondCard.classList.add('card--matched');
 
     matchedCards.push(firstCard, secondCard);
+
+    openedCards = [];
+
+    return;
   }
 
-  openedCards = [];
+  closeTimer = setTimeout(() => {
+    firstCard.classList.remove('card--open');
+    secondCard.classList.remove('card--open');
+
+    openedCards = [];
+    closeTimer = null;
+  }, 1000);
 };
 
 
@@ -139,26 +150,30 @@ const createCard = (value, index) => {
   cardInner.append(cardFront, cardBack);
   card.append(cardInner);
 
-  card.addEventListener('click', () => {
-    if (openedCards.length >= 2) {
-      return;
-    }
+card.addEventListener('click', () => {
+  if (closeTimer) {
+    return;
+  }
 
-    if (card.classList.contains('card--open')) {
-      return;
-    }
+  if (openedCards.length >= 2) {
+    return;
+  }
 
-    if (card.classList.contains('card--matched')) {
-      return;
-    }
+  if (card.classList.contains('card--open')) {
+    return;
+  }
 
-    card.classList.add('card--open');
-    openedCards.push(card);
+  if (card.classList.contains('card--matched')) {
+    return;
+  }
 
-    if (openedCards.length === 2) {
-      checkMatch();
-    }
-  });
+  card.classList.add('card--open');
+  openedCards.push(card);
+
+  if (openedCards.length === 2) {
+    checkMatch();
+  }
+});
 
   return card;
 };
