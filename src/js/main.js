@@ -80,6 +80,13 @@ const cardValues = [
 let openedCards = [];
 let matchedCards = [];
 let closeTimer = null;
+let moves = 0;
+let pairs = 0;
+
+const updateStats = () => {
+  movesValue.textContent = moves;
+  pairsValue.textContent = `${pairs} / 8`;
+};
 
 
 // Shuffle
@@ -105,11 +112,17 @@ const shuffle = (cards) => {
 const checkMatch = () => {
   const [firstCard, secondCard] = openedCards;
 
+  moves += 1;
+  updateStats();
+
   if (firstCard.dataset.value === secondCard.dataset.value) {
     firstCard.classList.add('card--matched');
     secondCard.classList.add('card--matched');
 
     matchedCards.push(firstCard, secondCard);
+    pairs += 1;
+
+    updateStats();
 
     openedCards = [];
 
@@ -186,6 +199,10 @@ const renderCards = () => {
 
   openedCards = [];
   matchedCards = [];
+  moves = 0;
+  pairs = 0;
+
+  updateStats();
 
   const cards = shuffle([...cardValues, ...cardValues]);
 
