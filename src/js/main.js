@@ -88,6 +88,51 @@ const updateStats = () => {
   pairsValue.textContent = `${pairs} / 8`;
 };
 
+const showVictoryModal = () => {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+
+  const modalTitle = document.createElement('h2');
+  modalTitle.className = 'modal__title';
+  modalTitle.textContent = 'Поздравляем!';
+
+  const modalText = document.createElement('p');
+  modalText.className = 'modal__text';
+  modalText.textContent = `Вы нашли все пары за ${moves} ходов!`;
+
+  const modalActions = document.createElement('div');
+  modalActions.className = 'modal__actions';
+
+  const newGameModalButton = document.createElement('button');
+  newGameModalButton.className = 'button';
+  newGameModalButton.type = 'button';
+  newGameModalButton.textContent = 'Новая игра';
+
+  const closeModalButton = document.createElement('button');
+  closeModalButton.className = 'button button--secondary';
+  closeModalButton.type = 'button';
+  closeModalButton.textContent = 'Закрыть';
+
+  modalActions.append(newGameModalButton, closeModalButton);
+  modal.append(modalTitle, modalText, modalActions);
+  overlay.append(modal);
+
+  document.body.append(overlay);
+
+  closeModalButton.addEventListener('click', () => {
+    overlay.remove();
+  });
+
+  newGameModalButton.addEventListener('click', () => {
+    overlay.remove();
+    renderCards();
+  });
+};
 
 // Shuffle
 
@@ -125,6 +170,10 @@ const checkMatch = () => {
     updateStats();
 
     openedCards = [];
+
+    if (pairs === 8) {
+      showVictoryModal();
+    }
 
     return;
   }

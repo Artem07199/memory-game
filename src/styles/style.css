@@ -166,6 +166,42 @@ button {
   box-shadow: 0 0 0 3px var(--color-primary);
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 55%);
+}
+
+.modal {
+  width: min(100%, 420px);
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--color-surface);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
+  text-align: center;
+}
+
+.modal__title {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+.modal__text {
+  margin: 0 0 24px;
+  color: var(--color-muted);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 @media (max-width: 600px) {
   .app {
     width: min(100% - 20px, 500px);
