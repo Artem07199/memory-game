@@ -80,6 +80,7 @@ let matchedCards = [];
 let closeTimer = null;
 let moves = 0;
 let pairs = 0;
+let activeModal = null;
 
 const leaderboard = [];
 
@@ -163,7 +164,25 @@ const addLeaderboardResult = () => {
   saveLeaderboard();
 };
 
+const closeModal = (overlay) => {
+  if (!overlay) {
+    return;
+  }
+
+  overlay.remove();
+
+  if (activeModal === overlay) {
+    activeModal = null;
+  }
+
+  document.body.style.overflow = '';
+};
+
 const createModal = (titleText, content, actions) => {
+  if (activeModal) {
+    closeModal(activeModal);
+  }
+
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
 
@@ -178,7 +197,6 @@ const createModal = (titleText, content, actions) => {
 
   const modalContent = document.createElement('div');
   modalContent.className = 'modal__content';
-
   modalContent.append(content);
 
   const modalActions = document.createElement('div');
@@ -191,6 +209,24 @@ const createModal = (titleText, content, actions) => {
   modal.append(title, modalContent, modalActions);
   overlay.append(modal);
   document.body.append(overlay);
+
+  activeModal = overlay;
+  document.body.style.overflow = 'hidden';
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+      closeModal(overlay);
+    }
+  });
+
+  const handleEscape = (event) => {
+    if (event.key === 'Escape' && activeModal === overlay) {
+      closeModal(overlay);
+      document.removeEventListener('keydown', handleEscape);
+    }
+  };
+
+  document.addEventListener('keydown', handleEscape);
 
   return overlay;
 };
@@ -219,11 +255,11 @@ const showVictoryModal = () => {
   );
 
   closeButton.addEventListener('click', () => {
-    overlay.remove();
+    closeModal(overlay);
   });
 
   newGameModalButton.addEventListener('click', () => {
-    overlay.remove();
+    closeModal(overlay);
     renderCards();
   });
 };
@@ -273,7 +309,7 @@ const showLeaderboard = () => {
   );
 
   closeButton.addEventListener('click', () => {
-    overlay.remove();
+    closeModal(overlay);
   });
 };
 
@@ -385,7 +421,13 @@ const renderCards = () => {
 
 leaderboardButton.addEventListener('click', showLeaderboard);
 
-newGameButton.addEventListener('click', renderCards);
+newGameButton.addEventListener('click', () => {
+  if (activeModal) {
+    closeModal(activeModal);
+  }
+
+  renderCards();
+});
 
 loadLeaderboard();
 renderCards();
