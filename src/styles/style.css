@@ -204,6 +204,23 @@ button {
 .modal__content {
   margin-bottom: 24px;
 }
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leaderboard__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--color-background);
+}
 
 @media (max-width: 600px) {
   .app {
